@@ -3,7 +3,7 @@ using OpenAI.Chat;
 
 namespace GenAiForDotNet;
 
-public class StreamingChatClient(string model, string apiKey, ChatCompletionOptions chatCompletionOptions)
+public class StreamingChatClient(string model, string apiKey, ChatCompletionOptions chatCompletionOptions) : IChatClient
 {
     private readonly ChatClient _client = new(model, apiKey);
 
@@ -12,9 +12,9 @@ public class StreamingChatClient(string model, string apiKey, ChatCompletionOpti
         var answerBuilder = new StringBuilder();
         ChatFinishReason? lastReason = null;
 
-        var streamingResult = _client.CompleteChatStreamingAsync(chatMessages, chatCompletionOptions);
+        var result = _client.CompleteChatStreamingAsync(chatMessages, chatCompletionOptions);
 
-        await foreach (var update in streamingResult)
+        await foreach (var update in result)
         {
             lastReason = update.FinishReason;
             if (update.ContentUpdate.Count == 0)

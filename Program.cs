@@ -2,16 +2,15 @@
 using GenAiForDotNet;
 using OpenAI.Chat;
 
-const string model = "gpt-4.1";
 var key = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-
 if (string.IsNullOrEmpty(key))
 {
     Console.WriteLine("Please set the OPENAI_API_KEY environment variable.");
     return;
 }
 
-var chatClient = new StreamingChatClient(model, key, new ChatCompletionOptions());
+//var chatClient = new StreamingChatClient("gpt-4.1", key, new ChatCompletionOptions());
+var chatClient = new BatchChatClient("gpt-5", key, new ChatCompletionOptions());
 var inputModerator = new InputModerator(key);
 
 var messages = new List<ChatMessage>
