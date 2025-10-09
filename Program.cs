@@ -2,9 +2,6 @@
 using GenAiForDotNet;
 using OpenAI.Chat;
 
-Console.OutputEncoding = Encoding.UTF8;
-Console.InputEncoding = Encoding.UTF8;
-
 const string model = "gpt-4.1";
 var key = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
 
@@ -14,7 +11,7 @@ if (string.IsNullOrEmpty(key))
     return;
 }
 
-var client = new ChatClient(model, key);
+var chatClient = new StreamingChatClient(model, key, new ChatCompletionOptions());
 var inputModerator = new InputModerator(key);
 
 var messages = new List<ChatMessage>
@@ -24,7 +21,8 @@ var messages = new List<ChatMessage>
                           "Будьте кратки.")
 };
 
-var completionOptions = new ChatCompletionOptions();
+Console.OutputEncoding = Encoding.UTF8;
+Console.InputEncoding = Encoding.UTF8;
 
 try
 {
@@ -32,7 +30,7 @@ try
     {
         // Get response from the model
         Console.ForegroundColor = ConsoleColor.White;
-        var (answer, lastReason) = await CompleteStreamingAsync(messages, completionOptions);
+        var (answer, lastReason) = await chatClient.CompleteAsync(messages);
 
         if (lastReason != null && lastReason != ChatFinishReason.Stop)
         {
@@ -60,29 +58,4 @@ catch(Exception ex)
 finally
 {
     Console.ResetColor();
-}
-
-return;
-
-async Task<(string, ChatFinishReason?)> CompleteStreamingAsync(
-    List<ChatMessage> chatMessages,ChatCompletionOptions chatCompletionOptions)
-{
-    var answerBuilder = new StringBuilder();
-    ChatFinishReason? lastReason = null;
-
-    var streamingResult = client.CompleteChatStreamingAsync(chatMessages, chatCompletionOptions);
-
-    await foreach (var update in streamingResult)
-    {
-        lastReason = update.FinishReason;
-        if (update.ContentUpdate.Count == 0)
-            continue;
-
-        var textUpdate = update.ContentUpdate[0].Text;
-
-        Console.Write(textUpdate);
-        answerBuilder.Append(textUpdate);
-    }
-
-    return (answerBuilder.ToString(), lastReason);
 }
