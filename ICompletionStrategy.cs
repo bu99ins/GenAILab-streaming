@@ -1,8 +1,8 @@
-using OpenAI.Chat;
+using Microsoft.Extensions.AI;
 
 namespace GenAiForDotNet;
 
-public interface IChatClient
+public interface ICompletionStrategy
 {
     Task<(string, ChatFinishReason?)> CompleteAsync(List<ChatMessage> chatMessages);
 }

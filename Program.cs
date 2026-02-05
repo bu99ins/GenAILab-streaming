@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using GenAiForDotNet;
-using OpenAI.Chat;
+using Microsoft.Extensions.AI;
 
 var key = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
 if (string.IsNullOrEmpty(key))
@@ -9,15 +9,15 @@ if (string.IsNullOrEmpty(key))
     return;
 }
 
-//var chatClient = new StreamingChatClient("gpt-4.1", key, new ChatCompletionOptions());
-var chatClient = new BatchChatClient("gpt-5", key, new ChatCompletionOptions());
+var chatClient = new StreamingChatClient("gpt-5", key);
+//var chatClient = new BatchChatClient("gpt-5", key);
 var inputModerator = new InputModerator(key);
 
 var messages = new List<ChatMessage>
 {
-    new SystemChatMessage("Вы - раздражающе дружелюбный чатбот с искусственным интеллектом" +
-                          "на конференции Azure Saturday AI в Сиэтле. " +
-                          "Будьте кратки.")
+    new(ChatRole.System, "Вы - раздражающе дружелюбный чатбот с искусственным интеллектом" +
+                         "на конференции Azure Saturday AI в Сиэтле. " +
+                         "Будьте кратки.")
 };
 
 Console.OutputEncoding = Encoding.UTF8;
@@ -38,7 +38,7 @@ try
             break;
         }
 
-        messages.Add(new AssistantChatMessage(answer));
+        messages.Add(new ChatMessage(ChatRole.Assistant, answer));
 
         Console.WriteLine();
 

@@ -1,4 +1,4 @@
-using OpenAI.Chat;
+using Microsoft.Extensions.AI;
 using OpenAI.Moderations;
 
 namespace GenAiForDotNet;
@@ -12,14 +12,14 @@ public class InputModerator(string apiKey)
     public async Task<ChatMessage> GetModeratedInputAsync(string? s)
     {
         var moderationMessage = await ModerateInputAsync(s);
-        if (moderationMessage is null) return new UserChatMessage(s);
+        if (moderationMessage is null) return new ChatMessage(ChatRole.User, s);
 
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("Your input was flagged by the moderation system. Please try again.");
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine(moderationMessage);
 
-        return new SystemChatMessage(
+        return new ChatMessage(ChatRole.System,
             "The content moderation system has flagged the user's answer. " +
             "Here is the moderation system's output. React accordingly to the user in the user's language, " +
             "explicitly mentioning that the user's specific violation will not be tolerated. \n\n"

@@ -1,17 +1,22 @@
-using OpenAI.Chat;
+using Microsoft.Extensions.AI;
+using OpenAI;
+using ChatFinishReason = Microsoft.Extensions.AI.ChatFinishReason;
+using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 namespace GenAiForDotNet;
 
-public class BatchChatClient(string model, string apiKey, ChatCompletionOptions chatCompletionOptions) : IChatClient
+public class BatchChatClient(string model, string apiKey) : ICompletionStrategy
 {
-    private readonly ChatClient _client = new(model, apiKey);
+    private readonly IChatClient _client = new OpenAIClient(apiKey)
+        .GetChatClient(model)
+        .AsIChatClient();
 
     public async Task<(string, ChatFinishReason?)> CompleteAsync(List<ChatMessage> chatMessages)
     {
-        var result = (await _client.CompleteChatAsync(chatMessages, chatCompletionOptions)).Value;
+        var result = await _client.GetResponseAsync(chatMessages);
 
-        Console.Write(result.Content[0].Text);
+        Console.Write(result.Text);
 
-        return (result.Content[0].Text, result.FinishReason);
+        return (result.Text, result.FinishReason);
     }
 }
