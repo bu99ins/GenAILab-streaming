@@ -1,23 +1,16 @@
 using Microsoft.Extensions.AI;
-using OpenAI;
 using System.Text;
-using ChatFinishReason = Microsoft.Extensions.AI.ChatFinishReason;
-using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 namespace GenAiForDotNet;
 
-public class StreamingChatClient(string model, string apiKey) : ICompletionStrategy
+public class StreamingChatClient(IChatClient chatClient) : ICompletionStrategy
 {
-    private readonly IChatClient _client = new OpenAIClient(apiKey)
-        .GetChatClient(model)
-        .AsIChatClient();
-
     public async Task<(string, ChatFinishReason?)> CompleteAsync(List<ChatMessage> chatMessages)
     {
         var answerBuilder = new StringBuilder();
         ChatFinishReason? lastReason = null;
 
-        var result = _client.GetStreamingResponseAsync(chatMessages);
+        var result = chatClient.GetStreamingResponseAsync(chatMessages);
 
         await foreach (var update in result)
         {

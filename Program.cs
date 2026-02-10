@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using GenAiForDotNet;
 using Microsoft.Extensions.AI;
+using OpenAI;
 
 var key = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
 if (string.IsNullOrEmpty(key))
@@ -9,8 +10,8 @@ if (string.IsNullOrEmpty(key))
     return;
 }
 
-var chatClient = new StreamingChatClient("gpt-5", key);
-//var chatClient = new BatchChatClient("gpt-5", key);
+var chatClient = new StreamingChatClient(new OpenAIClient(key).GetChatClient("gpt-5.2").AsIChatClient());
+//var chatClient = new BatchChatClient(new OpenAIClient(key).GetChatClient("gpt-5.2").AsIChatClient());
 var inputModerator = new InputModerator(key);
 
 var messages = new List<ChatMessage>
