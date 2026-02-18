@@ -1,6 +1,6 @@
 using Microsoft.Extensions.AI;
 
-namespace GenAiForDotNet;
+namespace GenAiForDotNet.AIClient;
 
 public class BatchChatClient(IChatClient chatClient) : ICompletionStrategy
 {

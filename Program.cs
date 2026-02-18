@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using GenAiForDotNet;
+using GenAiForDotNet.AIClient;
 using Microsoft.Extensions.AI;
 using OpenAI;
 
