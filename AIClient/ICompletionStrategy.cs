@@ -1,6 +1,6 @@
 using Microsoft.Extensions.AI;
 
-namespace GenAiForDotNet.AIClient;
+namespace GenAiForDotNet.AiClient;
 
 public interface ICompletionStrategy
 {

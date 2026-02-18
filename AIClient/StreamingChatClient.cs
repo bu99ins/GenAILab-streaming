@@ -1,7 +1,7 @@
 using Microsoft.Extensions.AI;
 using System.Text;
 
-namespace GenAiForDotNet.AIClient;
+namespace GenAiForDotNet.AiClient;
 
 public class StreamingChatClient(IChatClient chatClient) : ICompletionStrategy
 {
