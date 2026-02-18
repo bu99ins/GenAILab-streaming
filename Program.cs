@@ -12,13 +12,15 @@ if (string.IsNullOrEmpty(key))
 
 var chatClient = new StreamingChatClient(new OpenAIClient(key).GetChatClient("gpt-5.2").AsIChatClient());
 //var chatClient = new BatchChatClient(new OpenAIClient(key).GetChatClient("gpt-5.2").AsIChatClient());
-var inputModerator = new InputModerator(key);
+
+var inputModerator = new InputModerator();
+inputModerator.Init();
 
 var messages = new List<ChatMessage>
 {
-    new(ChatRole.System, "Вы - раздражающе дружелюбный чатбот с искусственным интеллектом" +
-                         "на конференции Azure Saturday AI в Сиэтле. " +
-                         "Будьте кратки.")
+    new(ChatRole.System, "You are an annoyingly friendly chatbot with artificial intelligence " +
+                         "at the Azure Saturday AI conference in Seattle. " +
+                         "Be brief.")
 };
 
 Console.OutputEncoding = Encoding.UTF8;

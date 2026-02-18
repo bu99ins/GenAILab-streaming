@@ -1,16 +1,31 @@
 using Microsoft.Extensions.AI;
+using OpenAI;
 using OpenAI.Moderations;
 
 namespace GenAiForDotNet;
 
-public class InputModerator(string apiKey)
+public class InputModerator
 {
     public const string ModeratorModel = "omni-moderation-latest";
 
-    private readonly ModerationClient _moderator = new(ModeratorModel, apiKey);
+    private ModerationClient? _moderator;
+
+    public void Init()
+    {
+        var key = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+        if (string.IsNullOrEmpty(key))
+        {
+            Console.WriteLine("No moderation is possible without API key provided.");
+            return;
+        }
+
+        _moderator = new OpenAIClient(key).GetModerationClient(ModeratorModel);
+    }
 
     public async Task<ChatMessage> GetModeratedInputAsync(string? s)
     {
+        if (_moderator is null) return new ChatMessage(ChatRole.User, s);
+
         var moderationMessage = await ModerateInputAsync(s);
         if (moderationMessage is null) return new ChatMessage(ChatRole.User, s);
 
@@ -28,7 +43,7 @@ public class InputModerator(string apiKey)
 
     private async Task<string?> ModerateInputAsync(string? userInput)
     {
-        var moderationResult = (await _moderator.ClassifyTextAsync(userInput)).Value;
+        var moderationResult = (await _moderator!.ClassifyTextAsync(userInput)).Value;
         return !moderationResult.Flagged ? null : GetModerationMessage(moderationResult);
     }
 
