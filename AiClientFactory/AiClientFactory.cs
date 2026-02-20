@@ -7,14 +7,14 @@ namespace GenAiForDotNet.AiClientFactory
 {
     internal class AiClientFactory : IAiClientFactory
     {
-        public ICompletionStrategy CreateChatClient(ChatClientType clientType)
+        public ICompletionStrategy CreateCompletion(ChatClientType clientType)
         {
-            return new BatchChatClient(CreateClient(clientType));
+            return new SimpleCompletion(CreateClient(clientType));
         }
 
-        public ICompletionStrategy CreateStreamingChatClient(ChatClientType clientType)
+        public ICompletionStrategy CreateStreamingCompletion(ChatClientType clientType)
         {
-            return new StreamingChatClient(CreateClient(clientType));
+            return new StreamingCompletion(CreateClient(clientType));
         }
 
         private IChatClient CreateClient(ChatClientType clientType)

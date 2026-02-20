@@ -2,7 +2,7 @@ using Microsoft.Extensions.AI;
 
 namespace GenAiForDotNet.AiClient;
 
-public class BatchChatClient(IChatClient chatClient) : ICompletionStrategy
+public class SimpleCompletion(IChatClient chatClient) : ICompletionStrategy
 {
     public async Task<(string, ChatFinishReason?)> CompleteAsync(List<ChatMessage> chatMessages)
     {

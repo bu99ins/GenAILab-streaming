@@ -5,7 +5,7 @@ namespace GenAiForDotNet.AiClientFactory
 {
     public interface IAiClientFactory
     {
-        ICompletionStrategy CreateChatClient(ChatClientType clientType);
-        ICompletionStrategy CreateStreamingChatClient(ChatClientType clientType);
+        ICompletionStrategy CreateCompletion(ChatClientType clientType);
+        ICompletionStrategy CreateStreamingCompletion(ChatClientType clientType);
     }
 }

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace GenAiForDotNet.AiClient;
 
-public class StreamingChatClient(IChatClient chatClient) : ICompletionStrategy
+public class StreamingCompletion(IChatClient chatClient) : ICompletionStrategy
 {
     public async Task<(string, ChatFinishReason?)> CompleteAsync(List<ChatMessage> chatMessages)
     {
@@ -15,8 +15,7 @@ public class StreamingChatClient(IChatClient chatClient) : ICompletionStrategy
         await foreach (var update in result)
         {
             lastReason = update.FinishReason;
-            if (update.Contents.Count == 0)
-                continue;
+            if (update.Contents.Count == 0) continue;
 
             Console.Write(update.Text);
             answerBuilder.Append(update.Text);

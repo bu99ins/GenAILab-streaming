@@ -4,15 +4,8 @@ using GenAiForDotNet.AiClientFactory;
 using GenAiForDotNet.Common;
 using Microsoft.Extensions.AI;
 
-var key = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-if (string.IsNullOrEmpty(key))
-{
-    Console.WriteLine("Please set the OPENAI_API_KEY environment variable.");
-    return;
-}
-
-var chatClient = new AiClientFactory().CreateStreamingChatClient(ChatClientType.OpenAi);
-//var chatClient = new AiClientFactory().CreateChatClient(ChatClientType.OpenAi);
+var completion = new AiClientFactory().CreateStreamingCompletion(ChatClientType.OpenAi);
+//var completion = new AiClientFactory().CreateCompletion(ChatClientType.OpenAi);
 
 var inputModerator = new InputModerator();
 inputModerator.Init();
@@ -33,7 +26,7 @@ try
     {
         // Get response from the model
         Console.ForegroundColor = ConsoleColor.White;
-        var (answer, lastReason) = await chatClient.CompleteAsync(messages);
+        var (answer, lastReason) = await completion.CompleteAsync(messages);
 
         if (lastReason != null && lastReason != ChatFinishReason.Stop)
         {
