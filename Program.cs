@@ -1,11 +1,10 @@
 ﻿using System.Text;
 using GenAiForDotNet;
 using GenAiForDotNet.AiClientFactory;
-using GenAiForDotNet.Common;
 using Microsoft.Extensions.AI;
 
-var completion = new AiClientFactory().CreateStreamingCompletion(ChatClientType.OpenAi);
-//var completion = new AiClientFactory().CreateCompletion(ChatClientType.OpenAi);
+var completion = new OpenAiClientFactory().CreateStreamingCompletion();
+//var completion = new OpenAiClientFactory().CreateCompletion();
 
 var inputModerator = new InputModerator();
 inputModerator.Init();
