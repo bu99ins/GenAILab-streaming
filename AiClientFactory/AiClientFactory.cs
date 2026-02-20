@@ -15,5 +15,7 @@ public abstract class AiClientFactory
         return new StreamingCompletion(CreateClient());
     }
 
+    public abstract IModeration CreateModeration();
+
     protected abstract IChatClient CreateClient();
 }

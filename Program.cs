@@ -1,13 +1,12 @@
 ﻿using System.Text;
-using GenAiForDotNet;
 using GenAiForDotNet.AiClientFactory;
 using Microsoft.Extensions.AI;
 
-var completion = new OpenAiClientFactory().CreateStreamingCompletion();
+var clientFactory = new OpenAiClientFactory();
+var completion = clientFactory.CreateStreamingCompletion();
 //var completion = new OpenAiClientFactory().CreateCompletion();
 
-var inputModerator = new InputModerator();
-inputModerator.Init();
+var moderation = clientFactory.CreateModeration();
 
 var messages = new List<ChatMessage>
 {
@@ -42,7 +41,7 @@ try
         Console.ForegroundColor = ConsoleColor.Yellow;
         var userInput = Console.ReadLine();
 
-        messages.Add(await inputModerator.GetModeratedInputAsync(userInput));
+        messages.Add(await moderation.GetModeratedInputAsync(userInput));
     }
 }
 catch(Exception ex)

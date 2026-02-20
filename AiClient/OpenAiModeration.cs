@@ -2,25 +2,13 @@ using Microsoft.Extensions.AI;
 using OpenAI;
 using OpenAI.Moderations;
 
-namespace GenAiForDotNet;
+namespace GenAiForDotNet.AiClient;
 
-public class InputModerator
+public class OpenAiModeration(string? key) : IModeration
 {
     public const string ModeratorModel = "omni-moderation-latest";
 
-    private ModerationClient? _moderator;
-
-    public void Init()
-    {
-        var key = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-        if (string.IsNullOrEmpty(key))
-        {
-            Console.WriteLine("No moderation is possible without API key provided.");
-            return;
-        }
-
-        _moderator = new OpenAIClient(key).GetModerationClient(ModeratorModel);
-    }
+    private readonly ModerationClient? _moderator = new OpenAIClient(key).GetModerationClient(ModeratorModel);
 
     public async Task<ChatMessage> GetModeratedInputAsync(string? s)
     {

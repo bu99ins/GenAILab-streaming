@@ -1,16 +1,25 @@
-﻿using Microsoft.Extensions.AI;
+﻿using GenAiForDotNet.AiClient;
+using Microsoft.Extensions.AI;
 using OpenAI;
 
 namespace GenAiForDotNet.AiClientFactory
 {
     internal class OpenAiClientFactory(string model = "gpt-5.2") : AiClientFactory
     {
+        private readonly string? _apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
+        public override IModeration CreateModeration()
+        {
+            return string.IsNullOrEmpty(_apiKey)
+                ? throw new InvalidOperationException("No moderation is possible without API key provided.")
+                : new OpenAiModeration(_apiKey);
+        }
+
         protected override IChatClient CreateClient()
         {
-            var key = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-            return string.IsNullOrEmpty(key)
+            return string.IsNullOrEmpty(_apiKey)
                 ? throw new InvalidOperationException("Please set the OPENAI_API_KEY environment variable.")
-                : new OpenAIClient(key).GetChatClient(model).AsIChatClient();
+                : new OpenAIClient(_apiKey).GetChatClient(model).AsIChatClient();
         }
     }
 }
