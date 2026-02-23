@@ -10,9 +10,7 @@ namespace GenAiForDotNet.AiClientFactory
 
         public override IModeration CreateModeration()
         {
-            return string.IsNullOrEmpty(_apiKey)
-                ? throw new InvalidOperationException("No moderation is possible without API key provided.")
-                : new OpenAiModeration(_apiKey);
+            return string.IsNullOrEmpty(_apiKey) ? new EmptyModeration() : new OpenAiModeration(_apiKey);
         }
 
         protected override IChatClient CreateClient()
