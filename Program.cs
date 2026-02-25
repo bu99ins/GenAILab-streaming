@@ -2,7 +2,7 @@
 using GenAiForDotNet.AiClientFactory;
 using Microsoft.Extensions.AI;
 
-var clientFactory = new OpenAiClientFactory();
+var clientFactory = new OllamaClientFactory(); //new OpenAiClientFactory();
 var completion = clientFactory.CreateStreamingCompletion();
 //var completion = new OpenAiClientFactory().CreateCompletion();
 
