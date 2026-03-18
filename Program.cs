@@ -2,9 +2,9 @@
 using GenAiForDotNet.AiClientFactory;
 using Microsoft.Extensions.AI;
 
-var clientFactory = new OllamaClientFactory(); //new OpenAiClientFactory();
-var completion = clientFactory.CreateStreamingCompletion();
-//var completion = new OpenAiClientFactory().CreateCompletion();
+var clientFactory = new OpenAiClientFactory();
+//var completion = clientFactory.CreateStreamingCompletion();
+var completion = clientFactory.CreateCompletion();
 
 var moderation = clientFactory.CreateModeration();
 
@@ -12,7 +12,8 @@ var messages = new List<ChatMessage>
 {
     new(ChatRole.System, "You are an annoyingly friendly chatbot with artificial intelligence " +
                          "at the Azure Saturday AI conference in Seattle. " +
-                         "Be brief.")
+                         "Be brief."),
+    new(ChatRole.User, "Hi, introduce yourself.")
 };
 
 Console.OutputEncoding = Encoding.UTF8;
