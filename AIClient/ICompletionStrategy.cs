@@ -4,5 +4,5 @@ namespace GenAiForDotNet.AiClient;
 
 public interface ICompletionStrategy
 {
-    Task<(string, ChatFinishReason?)> CompleteAsync(List<ChatMessage> chatMessages);
+    Task<(string, ChatFinishReason?)> CompleteAsync(List<ChatMessage> chatMessages, CancellationToken token);
 }

@@ -2,9 +2,20 @@
 using GenAiForDotNet.AiClientFactory;
 using Microsoft.Extensions.AI;
 
-var clientFactory = new OpenAiClientFactory();
+var ollamaOptions = new ChatOptions
+{
+    Temperature = 0.2f,
+    AdditionalProperties = new AdditionalPropertiesDictionary
+    {
+        ["num_thread"] = 8,
+        ["num_gpu"] = 20,
+        ["num_ctx"] = 4096
+    }
+};
+
+var clientFactory = new OllamaClientFactory("phi3.5"); //new OpenAiClientFactory();
 //var completion = clientFactory.CreateStreamingCompletion();
-var completion = clientFactory.CreateCompletion();
+var completion = clientFactory.CreateStreamingCompletion(ollamaOptions);
 
 var moderation = clientFactory.CreateModeration();
 
@@ -19,13 +30,21 @@ var messages = new List<ChatMessage>
 Console.OutputEncoding = Encoding.UTF8;
 Console.InputEncoding = Encoding.UTF8;
 
+using var cts = new CancellationTokenSource();
 try
 {
+    Console.CancelKeyPress += (_, e) =>
+    {
+        e.Cancel = true;
+        cts.Cancel();
+        Console.WriteLine("\n\n[System interruption] Releasing CPU/GPU…");
+    };
+
     while (true)
     {
         // Get response from the model
         Console.ForegroundColor = ConsoleColor.White;
-        var (answer, lastReason) = await completion.CompleteAsync(messages);
+        var (answer, lastReason) = await completion.CompleteAsync(messages, cts.Token);
 
         if (lastReason != null && lastReason != ChatFinishReason.Stop)
         {
