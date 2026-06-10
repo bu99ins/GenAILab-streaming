@@ -17,7 +17,7 @@ var ollamaOptions = new ChatOptions
     }
 };
 
-var clientFactory = new OllamaClientFactory("gemma4"); //new OpenAiClientFactory();
+var clientFactory = new OllamaClientFactory("llama3.2"); //new OpenAiClientFactory();
 //var completion = clientFactory.CreateStreamingCompletion();
 var completion = clientFactory.CreateStreamingCompletion(ollamaOptions);
 

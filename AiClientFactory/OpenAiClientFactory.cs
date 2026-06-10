@@ -2,22 +2,32 @@
 using Microsoft.Extensions.AI;
 using OpenAI;
 
-namespace GenAiForDotNet.AiClientFactory
+namespace GenAiForDotNet.AiClientFactory;
+
+internal class OpenAiClientFactory(string model = "gpt-5.2") : AiClientFactory
 {
-    internal class OpenAiClientFactory(string model = "gpt-5.2") : AiClientFactory
+    private readonly string? _apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+    private IChatClient? _chatClient;
+
+    public override IModeration CreateModeration()
     {
-        private readonly string? _apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+        return new GenericModeration(GetInnerClient());
+    }
 
-        public override IModeration CreateModeration()
-        {
-            return string.IsNullOrEmpty(_apiKey) ? new EmptyModeration() : new OpenAiModeration(_apiKey);
-        }
+    protected override IChatClient GetClient()
+    {
+        return GetInnerClient();
+    }
 
-        protected override IChatClient CreateClient()
-        {
-            return string.IsNullOrEmpty(_apiKey)
-                ? throw new InvalidOperationException("Please set the OPENAI_API_KEY environment variable.")
-                : new OpenAIClient(_apiKey).GetChatClient(model).AsIChatClient();
-        }
+    private IChatClient GetInnerClient()
+    {
+        if (_chatClient != null) return _chatClient;
+
+        if (string.IsNullOrEmpty(_apiKey))
+            throw new InvalidOperationException("Please set the OPENAI_API_KEY environment variable.");
+
+        _chatClient = new OpenAIClient(_apiKey).GetChatClient(model).AsIChatClient();
+
+        return _chatClient;
     }
 }

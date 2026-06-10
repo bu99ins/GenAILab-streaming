@@ -35,7 +35,7 @@ public class OpenAiModeration(string? key) : IModeration
         return !moderationResult.Flagged ? null : GetModerationMessage(moderationResult);
     }
 
-    private static string GetModerationMessage(ModerationResult moderationResult1)
+    private static string GetModerationMessage(OpenAI.Moderations.ModerationResult moderationResult1)
     {
         var hits = moderationResult1.GetType().GetProperties()
             .Where(p => p.PropertyType == typeof(ModerationCategory))

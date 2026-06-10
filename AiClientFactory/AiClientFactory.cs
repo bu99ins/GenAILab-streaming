@@ -7,15 +7,15 @@ public abstract class AiClientFactory
 {
     public ICompletionStrategy CreateCompletion(ChatOptions? options = null)
     {
-        return new SimpleCompletion(CreateClient(), options);
+        return new SimpleCompletion(GetClient(), options);
     }
 
     public ICompletionStrategy CreateStreamingCompletion(ChatOptions? options = null)
     {
-        return new StreamingCompletion(CreateClient(), options);
+        return new StreamingCompletion(GetClient(), options);
     }
 
     public abstract IModeration CreateModeration();
 
-    protected abstract IChatClient CreateClient();
+    protected abstract IChatClient GetClient();
 }
